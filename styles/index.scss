@@ -16,5 +16,17 @@ header {
 
 .news {
     margin: 10px;    
-    border: 1px solid; 
+    border: 1px solid;
+}
+
+.news-container {
+    margin-top: 50px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+
+    .news-card {
+        width: 300px;
+        margin: 10px;
+    }
 }

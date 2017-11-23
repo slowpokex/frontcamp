@@ -20,6 +20,7 @@ export default class NewsApiFactory {
     }
 
     getNews() {
+        const query = NewsApiFactory.buildQuery(this.query, this.params);
         const headers = new Headers();        
         const params = { 
             method: 'GET',
@@ -27,7 +28,7 @@ export default class NewsApiFactory {
             mode: 'cors',
             cache: 'default'
         };
-        const req = new Request(NewsApiFactory.buildQuery(this.query, this.params), params);
-        return fetch(req);
+        const request = new Request(query, params);
+        return fetch(request);
     }
 }
