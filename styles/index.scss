@@ -1,19 +1,5 @@
 @import "node_modules/bootstrap/scss/bootstrap";
 
-@import "node_modules/bootstrap/scss/functions";
-@import "node_modules/bootstrap/scss/variables";
-@import "node_modules/bootstrap/scss/mixins";
-
-header {
-    margin: 10px;
-    border: 1px solid;
-    text-align: center;
-
-    h1 {
-        font-size: 30px;
-    }
-}
-
 .news {
     margin: 10px;    
     border: 1px solid;
@@ -21,9 +7,6 @@ header {
 
 .news-container {
     margin-top: 50px;
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-around;
 
     .news-card {
         width: 300px;
