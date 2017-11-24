@@ -12,7 +12,7 @@
         </head>
     <body>
         <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
 
             <a class="navbar-brand" href="#">News</a>
             <button class="navbar-toggler"
@@ -54,7 +54,11 @@
         <div id="news" class="container d-flex flex-wrap justify-content-around news-container"></div>
 
         <!-- Footer content -->
-        <div class="container"></div>
+        <footer class="footer fixed-bottom">
+            <div class="container">
+                <span class="text-muted">Powered by </span><a href="https://newsapi.org/">News API</a>
+            </div>
+        </footer>
         <script src="build/bundle.js"></script>
     </body>
 </html>
