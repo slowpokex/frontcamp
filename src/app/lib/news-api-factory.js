@@ -1,4 +1,5 @@
 import config from '../config';
+import News from '../models/news';
 
 export default class NewsApiFactory {
 
@@ -12,24 +13,54 @@ export default class NewsApiFactory {
         return `${query.join('/')}?${rawParams.join('&')}`;
     }
 
-    constructor(endpoint, params) {
+    constructor(endpoint, parameters) {
         this.query = [ config.host, config.version, endpoint ];
         this.params = {
             apiKey: config.apiKey,
-            ...params
+            ...parameters
         };
+        this.lang = config.locale.EN;
     }
 
-    getNews() {
+    set q(query) {
+        this.params.q = query;
+    }
+
+    set sources(sources) {
+        this.params.sources = sources;
+    }
+
+    set category(category) {
+        this.params.category = category;
+    }
+
+    set lang(language) {
+        this.params.language = language;
+    }
+
+    set country(country) {
+        this.params.country = country;
+    }
+
+    getData() {
         const query = NewsApiFactory.buildQuery(this.query, this.params);
-        const headers = new Headers();
         const params = { 
             method: 'GET',
-            headers: headers,
+            headers: new Headers(),
             mode: 'cors',
             cache: 'default'
         };
-        const request = new Request(query, params);
-        return fetch(request);
+        return fetch(new Request(query, params));
+    }
+
+    getDomCards() {
+        return this.getData()
+            .then((res) => res.json())
+            .then((result) => {
+                if (result.status !== 'ok') {
+                    throw new Error('Error');
+                }
+                return result.articles.map(element => new News(element));        
+            });
     }
 }

@@ -11,6 +11,19 @@
     .news-card {
         width: 300px;
         margin: 10px;
+
+        .app-text {
+            display: inline-block;
+            max-height: 200px;
+            text-overflow: ellipsis;
+        }
+
+        .app-link {
+            width: 90%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     }
 }
 

@@ -6,10 +6,7 @@
         <meta name="description" content="The News API task">
         <meta name="author" content="Mikita isakau">
         <link rel="stylesheet" href="build/css/index.css">
-        <!--[if lt IE 9]>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
-        <![endif]-->
-        </head>
+    </head>
     <body>
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
@@ -18,17 +15,20 @@
             <button class="navbar-toggler"
                 type="button"
                 data-toggle="collapse"
-                data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
+                data-target="#openNavbar"
+                aria-controls="openNavbar"
                 aria-expanded="false"
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>           
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="collapse navbar-collapse" id="openNavbar">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="#/top-headlines">Top headlines <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="#/top-headlines">
+                            Top headlines
+                            <span class="sr-only">(current)</span>
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#/everything">Everything</a>
@@ -39,13 +39,13 @@
                 </ul>
                 <form class="form-inline my-2 my-lg-0">
                     <select id="languageBox" class="custom-select  mr-sm-4">
-                            <option selected>Russian</option>
-                            <option>English</option>
-                            <option>German</option>
-                            <option>French</option>
+                            <option selected value="en">English</option>
+                            <option value="ru">Russian</option>
+                            <option value="de">German</option>
+                            <option value="fr">French</option>
                     </select>
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    <input id="searchField" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button id="searchButton" class="btn btn-outline-success my-2 my-sm-0">Search</button>
                 </form>
             </div>
         </nav>

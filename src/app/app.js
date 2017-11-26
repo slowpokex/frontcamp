@@ -1,26 +1,32 @@
 import config from './config';
 import TopHeadlines from './lib/top-headlines';
 import Everything from './lib/everything';
+import Sources from './lib/sources';
 import News from './models/news';
+import Source from './models/source';
 
 const newsDomElement = document.getElementById('news');
 const languageDomElement = document.getElementById('languageBox');
-const newsSources = ['bbc-news', 'the-next-web'];
+const searchField = document.getElementById('searchField');
+const searchButton = document.getElementById('searchButton');
 
-let api = new TopHeadlines(newsSources);
+const params = {
+    q: '',
+    sources: [],
+    category: []
+};
 
-const load = (api) => {    
-    api.getNews()
-    .then((res) => res.json())
-    .then((newsResult) => {
-        if (newsResult.status !== 'ok') {
-            throw new Error('Error');
-        }
-        return newsResult.articles.map(element => new News(element));        
-    })
-    .then((news) => {
-        newsDomElement.innerHTML = news.map((elem) => elem.getCard()).join('');
-    });
+let api = new TopHeadlines(params);
+
+const setDefaultSelector = (selector) => {
+    selector.selectedIndex = 0;
+}
+
+const loadToDOM = (api) => {    
+    api.getDomCards()
+        .then((news) => {
+            newsDomElement.innerHTML = news.map((elem) => elem.getCard()).join('');
+        });
 }
 
 const loadByRoute = ({ location: { hash } }) => {
@@ -28,17 +34,29 @@ const loadByRoute = ({ location: { hash } }) => {
     const { endpoints } = config;
     switch(route) {
         case endpoints[0]: {
-            api = new TopHeadlines(newsSources);
+            api = new TopHeadlines(params);
         } break;
         case endpoints[1]: {
-            api = new Everything(newsSources);
+            api = new Everything(params);
+        } break;
+        case endpoints[2]: {
+            api = new Sources(params);
         } break;
         default: {
-            api = new TopHeadlines(newsSources);
+            api = new TopHeadlines(params);
         }
     }
-    load(api);
+    setDefaultSelector(languageDomElement);
+    loadToDOM(api);
 }
 
 window.addEventListener("hashchange", ({ target }) => loadByRoute(target), false);
+languageDomElement.addEventListener("change", ({ target }) => {
+    api.lang = target.value;
+    loadToDOM(api);
+}, false);
+searchButton.addEventListener("click", ({ target }) => {
+    api.q = searchField.value;
+    loadToDOM(api);
+}, false);
 loadByRoute(window);
