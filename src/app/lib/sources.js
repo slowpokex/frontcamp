@@ -9,14 +9,21 @@ export default class SourcesNews extends NewsApiFactory {
         });
     }
 
-    getDomCards() {
+    getSources() {
         return this.getData()
-            .then((res) => res.json())
-            .then((result) => {
-                if (result.status !== 'ok') {
-                    throw new Error('Error');
-                }
-                return result.sources.map(element => new Sources(element));        
+        .then((res) => res.json())
+        .then((result) => {
+            if (result.status !== 'ok') {
+                throw new Error('Error');
+            }
+            return result.sources;        
+        });
+    }
+
+    getDomCards() {
+        return this.getSources()
+            .then((sources) => {
+                return sources.map(element => new Sources(element));        
             });
     }
 }
