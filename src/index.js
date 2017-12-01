@@ -1,4 +1,7 @@
 import 'babel-register';
 import 'babel-polyfill';
 
-import './app/app';
+// fetch Polyfill
+import 'whatwg-fetch';
+
+import './app';

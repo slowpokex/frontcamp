@@ -16,12 +16,12 @@ var entryPoint = './src/index.js',
 /**/
 
 gulp.task('js', function () {
-    return browserify(entryPoint, {debug: true, extensions: ['es6']})
-        .transform("babelify", {presets: ["es2015", "stage-2"]})
+    return browserify(entryPoint, { debug: true, extensions: ['es6'] })
+        .transform('babelify')
         .bundle()
         .pipe(source('bundle.js'))
         .pipe(buffer())
-        .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('./build/'))
         .pipe(browserSync.reload({stream: true}));
@@ -29,7 +29,7 @@ gulp.task('js', function () {
 
 gulp.task('browser-sync', function () {
     const config = {
-        server: {baseDir: browserDir}
+        server: { baseDir: browserDir }
     };
 
     return browserSync(config);
@@ -44,7 +44,7 @@ gulp.task('sass', function () {
     }))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('./build/css'))
-    .pipe(browserSync.reload({stream: true}));
+    .pipe(browserSync.reload({ stream: true }));
 });
 
 gulp.task('watch', function () {
@@ -52,7 +52,7 @@ gulp.task('watch', function () {
     gulp.watch(sassWatchPath, ['sass']);
     gulp.watch(htmlWatchPath, function () {
         return gulp.src('')
-            .pipe(browserSync.reload({stream: true}))
+            .pipe(browserSync.reload({ stream: true }))
     });
 });
 

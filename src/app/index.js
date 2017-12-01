@@ -21,14 +21,14 @@ const setEmptyInput = (input) => {
     input.value = '';
 }
 
-const loadToDOM = (api) => {    
-    api.getDomCards()
+const loadToDOM = async (api) => {    
+    return await api.getDomCards()
         .then((values) => {
             newsDomElement.innerHTML = values.map((elem) => elem.getCard()).join('');
             return values;
         })
         .then((values) => {
-            // For choosing sources
+            // For choose sources
             if (!(api instanceof Sources)) return;
             values.forEach((item) => {
                 const itemCheckbox = item.getDOMElement();
