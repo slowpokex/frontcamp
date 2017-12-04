@@ -4,10 +4,14 @@
         "stage-2"
     ],
     "plugins": [
-        ["transform-regenerator", {
-          "asyncGenerators": true,
-          "generators": true,
-          "async": true
-        }]
-      ]
+        [
+            "./plugins/babel-plugin-remove-console",
+            "transform-regenerator",
+            {
+                "asyncGenerators": true,
+                "generators": true,
+                "async": true
+            }
+        ]
+    ]
 }

@@ -1,19 +1,17 @@
-var browserify = require('browserify'),
-    gulp = require('gulp'),
-    sourcemaps = require('gulp-sourcemaps'),
-    sass = require('gulp-sass'),
-    autoprefixer = require('gulp-autoprefixer'),
-    source = require('vinyl-source-stream'),
-    buffer = require('vinyl-buffer'),
-    browserSync = require('browser-sync');
+const browserify = require('browserify');
+const gulp = require('gulp');
+const sourcemaps = require('gulp-sourcemaps');
+const sass = require('gulp-sass');
+const autoprefixer = require('gulp-autoprefixer');
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
+const browserSync = require('browser-sync');
 
-/* pathConfig*/
-var entryPoint = './src/index.js',
-    browserDir = './',
-    sassWatchPath = './styles/**/*.scss',
-    jsWatchPath = './src/**/*.js',
-    htmlWatchPath = './**/*.html';
-/**/
+const entryPoint = './src/index.js';
+const browserDir = './';
+const sassWatchPath = './styles/**/*.scss';
+const jsWatchPath = './src/**/*.js';
+const htmlWatchPath = './**/*.html';
 
 gulp.task('js', function () {
     return browserify(entryPoint, { debug: true, extensions: ['es6'] })
