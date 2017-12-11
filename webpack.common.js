@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const devServer = require('webpack-dev-server');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 // Common bundle
@@ -23,10 +24,10 @@ module.exports = {
     }),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new ExtractTextPlugin({
-      filename: 'dist/[name].bundle.css',
-      allChunks: true
-    }),
+    new ExtractTextPlugin('bundle.css'),
+    new HtmlWebpackPlugin({
+      template: './src/index.html'
+    })
   ],
   module: {
     rules: [

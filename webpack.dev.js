@@ -14,7 +14,7 @@ const devConfig = {
         new webpack.HotModuleReplacementPlugin(),
     ],
     devServer: {
-        contentBase: __dirname,
+        contentBase: path.join(__dirname, 'dist'),
         port: 3000,
         open: true,
         hot: true,
