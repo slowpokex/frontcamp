@@ -9,7 +9,7 @@ const browserSync = require('browser-sync');
 
 const entryPoint = './src/index.js';
 const browserDir = './';
-const sassWatchPath = './styles/**/*.scss';
+const sassWatchPath = './src/styles/**/*.scss';
 const jsWatchPath = './src/**/*.js';
 const htmlWatchPath = './**/*.html';
 

@@ -1,9 +1,9 @@
 // fetch Polyfill
 import 'whatwg-fetch';
+
+import './styles/index.scss';
 import './app';
 
-if (NODE_ENV === 'development' && module.hot) {
-    module.hot.accept('./', function () {
-        console.log('Accepting the updated module!');
-    })
-}
+module.hot && module.hot.accept('./app', function () {
+    console.log('Accepting the updated module!');
+});

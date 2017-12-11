@@ -14,9 +14,12 @@ const devConfig = {
         new webpack.HotModuleReplacementPlugin(),
     ],
     devServer: {
-        port: 9000,
+        contentBase: __dirname,
+        port: 3000,
         open: true,
-        hot: true
+        hot: true,
+        filename: 'bundle.js',
+        publicPath: '/',
     },
 };
 
