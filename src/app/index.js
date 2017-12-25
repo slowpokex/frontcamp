@@ -1,13 +1,18 @@
-import TopHeadlines from './lib/top-headlines';
-import scope from './services/scope';
-import MainHandler from './handlers'
+const showButton = document.getElementById('showNewsButton');
 
-// Init
-const app = new MainHandler(new TopHeadlines(scope));
-app.load()
+showButton.addEventListener('click', () => {
+    Promise.all([
+        import('./lib/top-headlines'),
+        import('./services/scope'),
+        import('./handlers')
+    ])
+    .then(([ TopHeadlines, scope, MainHandler ]) =>
+        new MainHandler.default(new TopHeadlines.default(scope.default)))
+    .then(app => app.load())
     .then(() => {
         console.log('Successful');
     })
-    .catch(() => {
-        console.log('Failed');
+    .catch((err) => {
+        console.log('Failed', err);
     });
+});
