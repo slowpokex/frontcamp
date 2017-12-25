@@ -19,7 +19,7 @@ const devConfig = {
         open: true,
         hot: true,
         filename: 'bundle.js',
-        publicPath: '/',
+        publicPath: '/frontcamp/',
     },
 };
 

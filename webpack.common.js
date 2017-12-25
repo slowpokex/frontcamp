@@ -14,7 +14,7 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
     chunkFilename: '[name].bundle.js',
     filename: '[name].bundle.js',
-    publicPath: '/',
+    publicPath: '/frontcamp/',
   },
   resolve: {
     modules: ['node_modules'],
