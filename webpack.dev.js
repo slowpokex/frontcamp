@@ -14,7 +14,9 @@ const devConfig = {
         new webpack.HotModuleReplacementPlugin(),
     ],
     devServer: {
-        contentBase: path.join(__dirname, 'dist'),
+        contentBase: path.join(__dirname, 'docs'),
+        bonjour: true,
+        openPage: 'frontcamp/',
         port: 3000,
         open: true,
         hot: true,
