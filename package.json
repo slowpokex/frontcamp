@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "Frontcamp 3 tasks",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --require babel-core/register --reporter spec",
+    "test:watch": "mocha --require babel-core/register --watch",
     "start": "npm run build && webpack-dev-server --config webpack.dev.js",
     "build": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js",
-    "precommit": "npm run build:prod && git add docs/**"
+    "precommit": "npm run build:prod && git add docs/**",
+    "prepush": "npm test"
   },
   "author": "Mikita Isakau",
   "dependencies": {
@@ -33,6 +35,9 @@
     "html-loader": "^0.5.1",
     "html-webpack-plugin": "^2.30.1",
     "husky": "^0.14.3",
+    "jasmine": "^2.8.0",
+    "karma": "^2.0.0",
+    "mocha": "^4.1.0",
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.0",

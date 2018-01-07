@@ -15,26 +15,29 @@ export default class MainHandler {
     static languageDomElement = document.getElementById('languageBox');
     static searchField = document.getElementById('searchField');
     static searchButton = document.getElementById('searchButton');
+
     static setDefaultSelector = selector => selector.selectedIndex = 0;
-    static setEmptyInput = (input) => input.value = '';
-    
-    async loadByRoute({ location: { hash } }){
-        const route = hash.substr(2, (hash.length - 1));
-        const { endpoints } = config;
+    static setEmptyInput = input => input.value = '';
+    static getFactoryByRoute = (route, endpoints) => {
         switch(route) {
             case endpoints[0]: {
-                this.api = new TopHeadlines(scope);
-            } break;
+                return new TopHeadlines(scope);
+            }
             case endpoints[1]: {
-                this.api = new Everything(scope);
-            } break;
+                return new Everything(scope);
+            }
             case endpoints[2]: {
-                this.api = new Sources(scope);
-            } break;
+                return new Sources(scope);
+            }
             default: {
-                this.api = new TopHeadlines(scope);
+                return new TopHeadlines(scope);
             }
         }
+    }
+    
+    async loadByRoute({ location: { hash } }){
+        const { endpoints } = config;
+        this.api = MainHandler.getFactoryByRoute(hash.substr(2, (hash.length - 1)), endpoints)
         MainHandler.setEmptyInput(MainHandler.searchField);
         MainHandler.setDefaultSelector(MainHandler.languageDomElement);
         return await this.loadToDOM();

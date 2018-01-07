@@ -44,11 +44,11 @@ export class FluxContainer {
         return freezeeObj;
     }
 
-    constructor(state, reducers) {
+    constructor(state, reducers, emitter) {
         this.prevStates = [];
         this.state = FluxContainer._deepFreeze(state);
         this.reducers = FluxContainer._checkAndGetReducers(reducers);
-        this.emitter = new FluxEmitter();
+        this.emitter = emitter ? FluxContainer._checkAndGetEmitter(emitter) : new FluxEmitter();
     }
 
     _callEvent(event, ...params) {
@@ -66,7 +66,7 @@ export class FluxContainer {
         this._callEvent(Events.CHANGE_STATE, this.prevStates[this.prevStates.length - 1], this.state);
     }
 
-    dispatch({ action, payload }) {
+    dispatch(action) {
 
     }
 
@@ -85,16 +85,6 @@ export class FluxContainer {
         reducer = FluxContainer._checkHandler(reducer);
         this.reducers.filter((item) => item !== reducer);
         this._callEvent(Events.DELETE_REDUCER, reducer);
-    }
-
-    addListener(events, listener) {
-
-        this._callEvent(Events.ADD_LISTENER, listener);
-    }
-
-    deleteListener(listener) {
-
-        this._callEvent(Events.DELETE_LISTENER, listener);
     }
 }
 
