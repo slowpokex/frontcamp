@@ -6,8 +6,10 @@ showButton.addEventListener('click', () => {
         import('./services/scope'),
         import('./handlers')
     ])
-    .then(([ TopHeadlines, scope, MainHandler ]) =>
-        new MainHandler.default(new TopHeadlines.default(scope.default)))
+    .then(([ TopHeadlines, scope, MainHandler ]) => {
+        const container = scope.default.getInstance();
+        return new MainHandler.default(new TopHeadlines.default(container));
+    })
     .then(app => app.load())
     .then(() => {
         console.log('Successful');

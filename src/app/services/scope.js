@@ -1,15 +1,21 @@
 import FluxEmitter from './emitter';
+import reducers from './reducers';
+
+const INIT_STATE = {
+    q: '',
+    sources: [],
+    category: []
+};
 
 export const Events = {
     GET_STATE: 'GET_STATE',
     CHANGE_STATE: 'CHANGE_STATE',
     CHANGE_REDUCERS: 'CHANGE_REDUCERS',
     ADD_REDUCER: 'ADD_REDUCER',
-    DELETE_REDUCER: 'DELETE_REDUCER',
-    ADD_LISTENER: 'ADD_LISTENER',
-    DELETE_LISTENER: 'DELETE_LISTENER'
+    DELETE_REDUCER: 'DELETE_REDUCER'
 };
 
+// Flux pattern implementation
 export class FluxContainer {
     static _checkHandler = (handler) => {
         if (typeof (handler) !== 'function') {
@@ -46,9 +52,19 @@ export class FluxContainer {
 
     constructor(state, reducers, emitter) {
         this.prevStates = [];
-        this.state = FluxContainer._deepFreeze(state);
+        this.state = state;
         this.reducers = FluxContainer._checkAndGetReducers(reducers);
         this.emitter = emitter ? FluxContainer._checkAndGetEmitter(emitter) : new FluxEmitter();
+    }
+
+    get state() {
+        return FluxContainer._deepFreeze(this.state)
+    }
+
+    set state(state) {
+        if (!this.state) {
+            this.state = state;
+        }
     }
 
     _callEvent(event, ...params) {
@@ -62,12 +78,12 @@ export class FluxContainer {
 
     setState(state) {
         this.prevStates.push(this.state);
-        this.state = FluxContainer._deepFreeze(state);
+        this.state = state;
         this._callEvent(Events.CHANGE_STATE, this.prevStates[this.prevStates.length - 1], this.state);
     }
 
-    dispatch(action) {
-
+    dispatch(action, payload) {
+        
     }
 
     changeReducers(reducers) {
@@ -88,8 +104,46 @@ export class FluxContainer {
     }
 }
 
-export default {
-    q: '',
-    sources: [],
-    category: []
+// Builder pattern implementation
+export class FluxContainerBuilder {
+    constructor(...params) {
+        params.forEach(param => this[param] = param);
+    }
+
+    setEmitter(emitter = new FluxEmitter()) {
+        return this.emitter = emitter;
+    }
+
+    setReducers(reducers = []) {
+        return this.reducers = reducers;
+    }
+
+    setInitState(state = {}) {
+        return this.state = state;
+    }
+
+    getContainer() {
+        return new FluxContainer(this.state, this.reducers, this.emitter);
+    }
+}
+
+const fluxBuilder = new FluxContainerBuilder();
+fluxBuilder.setInitState(INIT_STATE);
+fluxBuilder.setReducers(Object.values(reducers));
+
+// Singletone pattern implementation
+const singleton = Symbol();
+const singletonEnforcer = Symbol();
+
+export default class FluxSingleton {
+  constructor(enforcer) {
+    if(enforcer != singletonEnforcer) throw "Cannot construct singleton";
+  }
+
+  static getInstance() {
+    if(!this[singleton]) {
+      this[singleton] = new FluxInstance(singletonEnforcer);
+    }
+    return this[singleton];
+  }
 }
