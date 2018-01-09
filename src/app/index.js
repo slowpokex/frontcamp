@@ -7,7 +7,7 @@ showButton.addEventListener('click', () => {
         import('./handlers')
     ])
     .then(([ TopHeadlines, scope, MainHandler ]) => {
-        const container = scope.default.getInstance();
+        const container = scope.default.getInstance().getContainer();
         return new MainHandler.default(new TopHeadlines.default(container));
     })
     .then(app => app.load())

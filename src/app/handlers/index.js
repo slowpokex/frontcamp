@@ -4,8 +4,11 @@ import Everything from '../lib/everything';
 import Sources from '../lib/sources';
 import News from '../models/news';
 import Source from '../models/source';
-import scope from '../services/scope';
+import FluxSingletone from '../services/scope';
 
+const scope = FluxSingletone.getInstance().getContainer();
+
+// This class almost implement Mediator pattern
 export default class MainHandler {
     constructor(api) {
         this.api = api;
@@ -18,19 +21,21 @@ export default class MainHandler {
 
     static setDefaultSelector = selector => selector.selectedIndex = 0;
     static setEmptyInput = input => input.value = '';
+
+    // Factory pattern implementation
     static getFactoryByRoute = (route, endpoints) => {
         switch(route) {
             case endpoints[0]: {
-                return new TopHeadlines(scope);
+                return new TopHeadlines(scope.getState());
             }
             case endpoints[1]: {
-                return new Everything(scope);
+                return new Everything(scope.getState());
             }
             case endpoints[2]: {
-                return new Sources(scope);
+                return new Sources(scope.getState());
             }
             default: {
-                return new TopHeadlines(scope);
+                return new TopHeadlines(scope.getState());
             }
         }
     }
@@ -53,12 +58,12 @@ export default class MainHandler {
                 if (!(this.api instanceof Sources)) return;
                 values.forEach((item) => {
                     const itemCheckbox = item.getDOMElement();
-                    itemCheckbox.checked = scope.sources.includes(itemCheckbox.id);
+                    itemCheckbox.checked = scope.getState().sources.includes(itemCheckbox.id);
                     itemCheckbox.addEventListener('change', ({ target }) => {
                         if (target.checked) {
-                            scope.sources.push(target.id)
+                            scope.dispatch({ action: 'ADD_SOURCE', payload: target.id})
                         } else {
-                            scope.sources = scope.sources.filter((item) => item !== target.id)
+                            scope.dispatch({ action: 'DELETE_SOURCE', payload: target.id})
                         }
                     });
                 });

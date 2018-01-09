@@ -1,5 +1,3 @@
-import scope from '../services/scope';
-
 const getTemplate = (source) => 
     `<div class="card news-card">
         <div class="card-body">

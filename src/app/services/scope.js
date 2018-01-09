@@ -10,98 +10,101 @@ const INIT_STATE = {
 export const Events = {
     GET_STATE: 'GET_STATE',
     CHANGE_STATE: 'CHANGE_STATE',
+    DISPATCH_STATE: 'DISPATCH_STATE',
     CHANGE_REDUCERS: 'CHANGE_REDUCERS',
     ADD_REDUCER: 'ADD_REDUCER',
     DELETE_REDUCER: 'DELETE_REDUCER'
 };
 
-// Flux pattern implementation
-export class FluxContainer {
-    static _checkHandler = (handler) => {
+//Flux pattern implementation
+function FluxContainer(state, reducers, emitter) {
+    const self = this;
+    const _checkHandler = (handler) => {
         if (typeof (handler) !== 'function') {
             throw new TypeError('Handler must be a function', handler);
         }
         return handler;
     }
 
-    static _checkAndGetReducers(reducers) {
+    const _checkAndGetReducers = (reducers) => {
         if (!Array.isArray(reducers)) {
             throw new TypeError('Reducers must be an array');
         }
-        return reducers.forEach(FluxContainer._checkHandler);
+        return reducers.map(_checkHandler);
     }
 
-    static _checkAndGetEmitter(emitter) {
+    const _checkAndGetEmitter = (emitter) => {
         if (!(emitter instanceof FluxEmitter)) {
             throw new TypeError('Emitter must be a child of FluxEmitter class', emitter);
         }
         return emitter;
     }
 
-    static _deepFreeze(obj) {
-        const freezeeObj = Object.assign({}, obj);
+    const _clone = (obj) => {
+        if (!obj || "object" != typeof obj) return obj;
+        var copy = obj.constructor();
+        Object.getOwnPropertyNames(obj).forEach((attr) => {
+            obj.hasOwnProperty(attr) && (copy[attr] = obj[attr]);
+        })
+        return copy;
+    }
+
+    const _deepFreeze = function(obj) {
+        let freezeObj = _clone(obj);
         Object.freeze(freezeObj);
-        Object.getOwnPropertyNames(freezeeObj)
+        Object.getOwnPropertyNames(freezeObj)
             .forEach(function (prop) {
-                if (freezeeObj.hasOwnProperty(prop) && freezeeObj[prop] !== null && (typeof freezeeObj[prop] === "object" || typeof freezeeObj[prop] === "function") && !Object.isFrozen(freezeeObj[prop])) {
-                    deepFreeze(freezeeObj[prop]);
+                if (freezeObj.hasOwnProperty(prop) && freezeObj[prop] !== null && (typeof freezeObj[prop] === "object" || typeof freezeObj[prop] === "function") && !Object.isFrozen(freezeObj[prop])) {
+                    _deepFreeze(freezeObj[prop]);
                 }
             });
-        return freezeeObj;
+        return freezeObj;
     }
 
-    constructor(state, reducers, emitter) {
-        this.prevStates = [];
-        this.state = state;
-        this.reducers = FluxContainer._checkAndGetReducers(reducers);
-        this.emitter = emitter ? FluxContainer._checkAndGetEmitter(emitter) : new FluxEmitter();
+    const _callEvent = (event, ...params) => {
+        emitter && self.emitter.emit(event, ...params);
     }
 
-    get state() {
-        return FluxContainer._deepFreeze(this.state)
+    // Public methods
+    this.getState = (state) => {
+        _callEvent(Events.GET_STATE, __state);
+        return _deepFreeze(__state)
     }
 
-    set state(state) {
-        if (!this.state) {
-            this.state = state;
-        }
+    this.setState = (state) => {
+        self.prevStates.push(__state);
+        __state = _clone(state);
+        _callEvent(Events.CHANGE_STATE, self.prevStates[self.prevStates.length - 1], __state);
     }
 
-    _callEvent(event, ...params) {
-        emitter && this.emitter.emit(event, ...params);
+    this.dispatch = (actionEntity) => {
+        self.reducers.forEach((reducer) => {
+            __state = _clone(reducer(__state, actionEntity));
+        });
+        _callEvent(Events.DISPATCH_STATE);
     }
 
-    getState() {
-        this._callEvent(Events.GET_STATE, this.state);
-        return this.state;
+    this.changeReducers = (reducers) => {
+        const prevReducers = self.reducers;
+        self.reducers = _checkAndGetReducers(reducers);
+        _callEvent(Events.CHANGE_REDUCERS, prevReducers, self.reducers);
     }
 
-    setState(state) {
-        this.prevStates.push(this.state);
-        this.state = state;
-        this._callEvent(Events.CHANGE_STATE, this.prevStates[this.prevStates.length - 1], this.state);
+    this.addReducer = (reducer) => {
+        self.reducers.push(_checkHandler(reducer));
+        _callEvent(Events.ADD_REDUCER, reducer);
+    }
+    
+    this.deleteReducer = (reducer) => {
+        reducer = _checkHandler(reducer);
+        self.reducers.filter((item) => item !== reducer);
+        _callEvent(Events.DELETE_REDUCER, reducer);
     }
 
-    dispatch(action, payload) {
-        
-    }
-
-    changeReducers(reducers) {
-        const prevReducers = this.reducers;
-        this.reducers = FluxContainer._checkAndGetReducers(reducers);
-        this._callEvent(Events.CHANGE_REDUCERS, prevReducers, this.reducers);
-    }
-
-    addReducer(reducer) {
-        this.reducers.push(FluxContainer._checkHandler(reducer));
-        this._callEvent(Events.ADD_REDUCER, reducer);
-    }
-
-    deleteReducer(reducer) {
-        reducer = FluxContainer._checkHandler(reducer);
-        this.reducers.filter((item) => item !== reducer);
-        this._callEvent(Events.DELETE_REDUCER, reducer);
-    }
+    let __state = _clone(state);
+    this.prevStates = [];
+    this.reducers = _checkAndGetReducers(reducers);
+    this.emitter = emitter ? _checkAndGetEmitter(emitter) : new FluxEmitter();
 }
 
 // Builder pattern implementation
@@ -127,17 +130,20 @@ export class FluxContainerBuilder {
     }
 }
 
-const fluxBuilder = new FluxContainerBuilder();
-fluxBuilder.setInitState(INIT_STATE);
-fluxBuilder.setReducers(Object.values(reducers));
-
 // Singletone pattern implementation
 const singleton = Symbol();
 const singletonEnforcer = Symbol();
 
-export default class FluxSingleton {
+export default class FluxInstance {
+  static fluxContainer;
   constructor(enforcer) {
     if(enforcer != singletonEnforcer) throw "Cannot construct singleton";
+    if (!FluxInstance.fluxContainer) {
+        const fluxBuilder = new FluxContainerBuilder();
+        fluxBuilder.setInitState(INIT_STATE);
+        fluxBuilder.setReducers(Object.values(reducers));
+        FluxInstance.fluxContainer = fluxBuilder.getContainer();
+    }
   }
 
   static getInstance() {
@@ -145,5 +151,9 @@ export default class FluxSingleton {
       this[singleton] = new FluxInstance(singletonEnforcer);
     }
     return this[singleton];
+  }
+
+  getContainer() {
+    return FluxInstance.fluxContainer;
   }
 }

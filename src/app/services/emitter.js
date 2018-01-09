@@ -1,5 +1,5 @@
+// Observer pattern implementation
 export default class FluxEmitter {
-
     static checkFunc(func) {
         if (typeof (func) !== 'function') {
             throw new TypeError('Handler must be a function');

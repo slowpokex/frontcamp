@@ -1,8 +1,8 @@
 import config from '../config';
 import News from '../models/news';
 
+// The child of corrent class are implemented decorator pattern
 export default class NewsApiFactory {
-
     static buildQuery(query, params) {
         const rawParams = [];
         for (let [ key, value ] of Object.entries(params)) {
