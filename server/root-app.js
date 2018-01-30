@@ -32,7 +32,7 @@ app.use('/', router);
 router
     .route('/*')
     .all((req, res) => {
-        res.render('index', { title: 'Hey', message: 'Hello there!' })
+        res.render('index', { title: 'Super Page Lalka' })
     });
 
 export default app;
