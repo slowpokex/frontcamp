@@ -1,12 +1,11 @@
 import express, { Router } from 'express';
+import restRouter from './models/restaurant/router'
 
 const rootRouter = new Router();
-const apiRoutes = new Router();
 
-//Api router
-apiRoutes.use(express.json());
-apiRoutes.use(express.urlencoded({ extended: true }));
-
-rootRouter.use('/api/', apiRoutes);
+// Root router
+rootRouter.use(express.json());
+rootRouter.use(express.urlencoded({ extended: true }));
+rootRouter.use('/api/restaurant/', restRouter);
 
 export default rootRouter;

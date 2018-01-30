@@ -21,6 +21,8 @@
     "babel-runtime": "^6.26.0",
     "bootstrap": "^4.0.0-beta.2",
     "express": "^4.16.2",
+    "lodash": "^4.17.4",
+    "mongoose": "^5.0.2",
     "pug": "^2.0.0-rc.4",
     "whatwg-fetch": "^2.0.3"
   },

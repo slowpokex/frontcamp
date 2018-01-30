@@ -1,4 +1,4 @@
-// Observer pattern implementation
+// Observer pattern implementationg
 export default class FluxEmitter {
     static checkFunc(func) {
         if (typeof (func) !== 'function') {
